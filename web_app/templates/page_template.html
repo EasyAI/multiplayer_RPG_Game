@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title>Search Finder</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="{{ url_for('static', filename='js/display.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/assetObjs.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+    </head>
+    <header>
+        <h1>[PLACEHOLDER TITLE]</h1>
+    </header>
+    <body>
+        {% block content %}{% endblock content %}
+    </body>
+    <footer>
+        <h3>made by me :)</h3>
+    </footer>
+</html>
