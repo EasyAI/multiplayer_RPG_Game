@@ -6,6 +6,8 @@ class Game_Engine_2D(object):
         self.screen_size = screen_size
         self.tile = tile_size
 
+        self.monster_zones = []
+
 
     def update_entity_list(self, entity_list, entityID=None):
         if entityID != None:
@@ -27,14 +29,14 @@ class Game_Engine_2D(object):
         if direction == 'up':
             attack_section = [
                 pos_x, 
-                (pos_y-attack_range), 
+                pos_y-attack_range, 
                 pos_x+size_x, 
-                (pos_y-attack_range)]
+                pos_y]
 
         elif direction == 'down':
             attack_section = [
                 pos_x, 
-                ((pos_y+size_y)+attack_range), 
+                pos_y+size_y, 
                 pos_x+size_x, 
                 ((pos_y+size_y)+attack_range)]
 
@@ -42,24 +44,27 @@ class Game_Engine_2D(object):
             attack_section = [
                 pos_x-attack_range, 
                 pos_y, 
-                pos_x-attack_range, 
+                pos_x, 
                 (pos_y+size_y)]
 
         elif direction == 'right':
             attack_section = [
-                ((pos_x+size_x)+attack_range), 
+                ((pos_x+size_x)), 
                 pos_y, 
                 ((pos_x+size_x)+attack_range), 
                 (pos_y+size_y)]
 
+        hitEntities = []
         for entity in self.entity_list:
             if entityID != entity['id'] and entity['type'] == 'monster':
-                if (attack_section[0] >= entity['x']) and (attack_section[2] <= (entity['x']+entity['sizeX'])):
-                    if (attack_section[1] >= entity['y']) and (attack_section[3] <= (entity['y']+entity['sizeY'])):
-                        return(entity['id'])
-                        break
+                entitySizeX = entity['x']+entity['sizeX']
+                entitySizeY = entity['y']+entity['sizeY']
 
-        return(-1)
+                if (entity['x'] >= attack_section[0]) and (entitySizeX <= attack_section[2]):
+                    if (entity['y'] >= attack_section[1]) and (entitySizeY <= attack_section[3]):
+                        hitEntities.append(entity['id'])
+
+        return(hitEntities)
 
 
     def move(self, entityID, direction, speed):
@@ -89,7 +94,8 @@ class Game_Engine_2D(object):
             return(-1)
 
         collisionID = self._check_collisions(entityID, pos_x, pos_y, size_x, size_y)
-        if collisionID:
+
+        if collisionID or (type(collisionID) == int and collisionID == 0):
             if type(collisionID) == int:
                 return(True, pos_x, pos_y, collisionID)
             if type(collisionID) == str:
@@ -116,14 +122,29 @@ class Game_Engine_2D(object):
                     if (pos_y >= entity['y']) and ((pos_y+size_y) <= (entity['y']+entity['sizeY'])):
                         return(entity['id'])
                         break
+            else:
+                if entity['type'] == 'monster':
+                    zoneID = entity['zone']
+                else:
+                    zoneID = None
         
-        if self._check_screen_collision(pos_x, pos_y, size_x, size_y):
+        if self._check_boundry_collision(pos_x, pos_y, size_x, size_y, zoneID):
             return(0)
 
         return(False)
 
 
-    def _check_screen_collision(self, pos_x, pos_y, size_x, size_y):
+    def _check_boundry_collision(self, pos_x, pos_y, size_x, size_y, mZone=None):
+
+        if mZone != None:
+            ## Check for monster zone boundery collision
+            if (self.monster_zones[mZone][0]*self.tile > pos_x) or (pos_x+size_x > (self.monster_zones[mZone][0]+self.monster_zones[mZone][2])*self.tile): 
+                return(True)
+
+            if (self.monster_zones[mZone][1]*self.tile > pos_y) or (pos_y+size_y > (self.monster_zones[mZone][1]+self.monster_zones[mZone][3])*self.tile):
+                return(True)
+
+        ## Check forscreen edge collision
         if (0 > pos_x) or (pos_x+size_x > self.screen_size['x']): 
             return(True)
 

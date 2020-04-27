@@ -92,7 +92,6 @@ const ShopMenu = function() {
                 return(this.BASE_MENU);
             break;
             case 0:
-                console.log("test");
                 return(this.BUY_MENU);
             break;
             case 1:

@@ -98,7 +98,7 @@ $(document).ready(function(){
             player_data.inMenu = true;
             player_data.currMenu = "shop";
 
-            xmlhttp.open("GET", "rest-api/v1/get_shop_stock", true);
+            xmlhttp.open("GET", "/rest-api/v1/get_shop_stock", true);
             xmlhttp.send();
 
             shopMenu.SELL_MENU.elements = player_data.inventory;
@@ -117,6 +117,7 @@ $(document).ready(function(){
                 "Armour: "+player_data.armour,
                 "Attack: "+player_data.attack,
                 "Gold: "+player_data.gold];
+
             playerMenu.INVENTORY_MENU.elements = player_data.inventory;
 
             currentMenu = playerMenu.get_current_menu(-1);
@@ -147,7 +148,7 @@ $(document).ready(function(){
                 } else {
                     if (currentMenu.title == "Inventory Menu"){
                         // If the player has accessed their inventory then they can use items as long as they exist.
-                        d = currentMenu.elements[currentMenu.index];
+                        d = currentMenu.elements[currentMenu.index][0];
                         if (d != undefined){
                             a="use";
                         }
@@ -158,7 +159,7 @@ $(document).ready(function(){
         }
 
         if (keyUp == true) {
-            if (a == "attack"){
+            if (a == "attack" || a == "shoot"){
                 // If the user is about to launch and attack then find the attack direction for the user.
                 socket.emit('socket/v1/update_player_data', {
                     'player_id':player_id, 

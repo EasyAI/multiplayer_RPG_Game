@@ -1,4 +1,15 @@
 
+var ITEM_NAMES = [
+    'BRONZE_SWORD',
+    'BRONZE_ARMOUR',
+    'MINOR_HP_POTION',
+    'IRON_SWORD',
+    'IRON_ARMOUR',
+    'NORMAL_HP_POTION',
+    'STEEL_SWORD',
+    'STEEL_ARMOUR',
+    'GREAT_HP_POTION'];
+
 const Display = function(canvas, dimensions, tileSize) {
 
     this.context = canvas.getContext("2d");
@@ -61,12 +72,19 @@ const Display = function(canvas, dimensions, tileSize) {
         this.context.fillText(menu.title, this.tileSize, yPosition);
 
         for (let i = 0; i<menu.elements.length; i++){
+            let showTxt;
+            if (menu.expandable == false && menu.navagateable == true) {
+                showTxt = ITEM_NAMES[menu.elements[i][0]]+" : "+menu.elements[i][1];
+            } else {
+                showTxt = menu.elements[i];
+            }
+
             if (menu.index == i) {
                 this.context.fillStyle="red";
             } else {
                 this.context.fillStyle="white";
             }
-            this.context.fillText(menu.elements[i], this.tileSize, (fontSize*(i+1))+yPosition);
+            this.context.fillText(showTxt, this.tileSize, (fontSize*(i+1))+yPosition);
         }
     }
 

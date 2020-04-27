@@ -5,20 +5,21 @@ The class for MONSTER characeters within the game.
 '''
 class Monster:
 
-    def __init__(self, entityID, x, y, size_x=10, size_y=10):
+    def __init__(self, entityID, monster_zone, x, y, size_x=10, size_y=10):
         # Base definitions
         self.entity_type        = 'monster'
         self.is_solid           = True
         self.health             = 100
         self.attack             = 20
         self.armour             = 0
-        self.inventory          = []
+        self.inventory          = {}
         self.gold               = 0
 
         # Variable definitions
         self.entityID           = entityID
         self.position           = {'x':x, 'y':y}
         self.size               = {'x':size_x, 'y':size_y}
+        self.monsterZone        = monster_zone
 
         self.attack_range       = 1
 
@@ -34,6 +35,7 @@ class Monster:
                 'id':       self.entityID,
                 'isSolid':  self.is_solid,
                 'type':     self.entity_type,
+                'zone':     self.monsterZone,
                 'x':        self.position['x'],
                 'y':        self.position['y'],
                 'sizeX':    self.size['x'],
@@ -69,7 +71,7 @@ class Player:
         self.attack             = 5
         self.gold               = 0
         self.armour             = 0
-        self.inventory          = []
+        self.inventory          = {}
         self.is_solid           = True
 
         # Variable definitions
@@ -223,6 +225,7 @@ class Bolt:
         self.speed          = 0
         self.hasHit         = False
         self.maxDistance    = 10
+        self.traveled       = 0
 
         # Variable definitions
         self.entityID       = entityID
